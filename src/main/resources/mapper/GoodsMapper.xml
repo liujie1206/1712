@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liujie.mappers.GoodsMapper">
+	<resultMap type="com.liujie.beans.Goods" id="rm">
+	<id column="gid" property="gid"/>
+	<result column="gname" property="gname"/>
+	<result column="ename" property="ename"/>
+	<result column="gsize" property="gsize"/>
+	<result column="gprice" property="gprice"/>
+	<result column="gnum" property="gnum"/>
+	<result column="glabel" property="glabel"/>
+	<result column="gpicture" property="gpicture"/>
+	<result column="bname" property="brand.bname"/>
+	<result column="kname" property="goodskind.kname"/>
+	<result column="bid" property="brand.bid"/>
+	<result column="kid" property="goodskind.kid"/>
+	
+	
+	</resultMap>
+	<select id="findAll" parameterType="map" resultMap="rm">
+		SELECT g.*,b.`bname`,k.`kname` FROM goods AS g 
+		JOIN brand AS b ON g.`bid`=b.`bid` 
+		JOIN goodskind AS k ON k.`kid`=g.`kid`
+	</select>
+	
+	<select id="findOne" resultMap="rm">
+	select * from goods where gid=#{gid}
+	</select>
+	
+	<insert id="addGoods" parameterType="com.liujie.beans.Goods">
+	insert goods 
+	(gid,gname,ename,price,num,size,label,picture,bid,kid)
+	values(#{gid},#{gname},#{ename},#{price},#{num},#{size},#{label},#{picture},#{brand.bid},#{goodskind.kid})
+	
+	</insert>
+	
+	<update id="updateGoods" parameterType="com.liujie.beans.Goods">
+	update goods set gname=#{gname},ename=#{ename},price=#{price},num=#{num},
+	size=#{size},label=#{label},picture=#{picture},bid=#{brand.bid},kid=#{goodskind.kid} where gid=#{gid}
+	</update>
+	
+	<delete id="deleteGoods" parameterType="string">
+	delete from goods where gid in(${ids})
+	</delete>
+	
+	<select id="findBrand" resultType="com.liujie.beans.Brand">
+	select * from brand
+	</select>
+	
+	<select id="findGoodskind" resultType="com.liujie.beans.Goodskind">
+	select * from Goodskind
+	</select>
+
+</mapper>
